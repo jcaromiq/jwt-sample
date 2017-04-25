@@ -15,6 +15,8 @@ import org.springframework.web.filter.GenericFilterBean;
 public class JWTAuthenticationFilter extends GenericFilterBean {
 
 	private TokenAuthenticationService tokenAuthenticationService;
+	
+	private static final String HEADER_STRING = "Authorization";
 
 	public JWTAuthenticationFilter(TokenAuthenticationService tokenAuthenticationService) {
 		super();
@@ -24,7 +26,8 @@ public class JWTAuthenticationFilter extends GenericFilterBean {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
 			throws IOException, ServletException {
-		Authentication authentication = tokenAuthenticationService.getAuthentication((HttpServletRequest) request);
+		String token = ((HttpServletRequest) request).getHeader(HEADER_STRING);
+		Authentication authentication = tokenAuthenticationService.getAuthentication(token);
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		filterChain.doFilter(request, response);

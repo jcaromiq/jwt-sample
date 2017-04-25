@@ -25,10 +25,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().authorizeRequests().antMatchers("/").permitAll().antMatchers(HttpMethod.POST, "/auth")
-				.permitAll().anyRequest().authenticated().and()
-				// And filter other requests to check the presence of JWT in
-				// header
+		http.csrf().disable().authorizeRequests().antMatchers("/").permitAll()
+				.antMatchers(HttpMethod.POST, "/auth").permitAll()
+				.anyRequest().authenticated().and()
+				// Filtramos las demas request para checkear la presencia del JWT en las cabeceras
 				.addFilterBefore(new JWTAuthenticationFilter(tokenAuthenticationService),
 						UsernamePasswordAuthenticationFilter.class);
 	}

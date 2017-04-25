@@ -5,7 +5,6 @@ import static java.util.Collections.emptyList;
 import java.io.IOException;
 import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,9 +18,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Service
 public class TokenAuthenticationService {
 
-	private final long EXPIRATION_TIME = 864_000_000;
-	private final String SECRET = "69abd4abf577d7cfd6d370f146611fea";
-	static final String HEADER_STRING = "Authorization";
+	private final long EXPIRATION_TIME = 3600000; 
+	private final String SECRET = "69abd4abf577d7cfd6d370f146611fea"; //TODO: JVM OR ENVIRONMENT PARAMETER
+	
 
 	public String generateToken(String payload) {
 		String jwt = Jwts.builder().setSubject(payload)
@@ -30,11 +29,15 @@ public class TokenAuthenticationService {
 		return jwt;
 	}
 
-	public Authentication getAuthentication(HttpServletRequest request) {
-		String token = request.getHeader(HEADER_STRING);
+	public Authentication getAuthentication(String token) {
+		UsernamePasswordAuthenticationToken authenticationToken = null;
 		if (token != null) {
-			// parse the token.
-			String data = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getBody().getSubject();
+			String data = Jwts.parser()
+					.setSigningKey(SECRET)
+					.parseClaimsJws(token)
+					.getBody()
+					.getSubject();
+			
 			ObjectMapper mapper = new ObjectMapper();
 			AuthDTO user = null;
 			try {
@@ -43,9 +46,9 @@ public class TokenAuthenticationService {
 
 			}
 
-			return user != null ? new UsernamePasswordAuthenticationToken(user.getUsername(), null, emptyList()) : null;
+			authenticationToken= (user != null)? new UsernamePasswordAuthenticationToken(user.getUsername(), null, emptyList()) : null;
 		}
-		return null;
+		return authenticationToken;
 	}
 
 }

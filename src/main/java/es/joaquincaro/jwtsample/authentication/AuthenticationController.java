@@ -28,17 +28,18 @@ public class AuthenticationController {
 	@RequestMapping(value = "/auth", method = RequestMethod.POST)
 	public ResponseEntity<String> create(@RequestBody AuthDTO authDTO) throws JsonProcessingException {
 
-		UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-				authDTO.getUsername(), authDTO.getPassword());
+		UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken 
+			= new UsernamePasswordAuthenticationToken(authDTO.getUsername(), authDTO.getPassword());
 
+		// se hace la llamada al authenticationManager definido en el contexto de Spring, 
+		// en el caso que las credenciales no sean correctas lanzará una excepcion de autenticación.
 		Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+		
 		// Creamos un nuevo dto que contendrá el nombre del usuario
 		AuthDTO authenticated = new AuthDTO();
 		authenticated.setUsername(authentication.getName());
-		// Podriamos pasar directamente el nombre al servicio de tokenizar en
-		// lugar del objeto json,
-		// pero de esta manera podriamos incluir tambien los roles y demas info
-		// en el token
+		// Podriamos pasar directamente el nombre al servicio de tokenizar en lugar del objeto json, 
+		// pero de esta manera podriamos incluir tambien los roles y demas info en el token
 		ObjectMapper mapper = new ObjectMapper();
 		String jwt = tokenAuthenticationService.generateToken(mapper.writeValueAsString(authenticated));
 
