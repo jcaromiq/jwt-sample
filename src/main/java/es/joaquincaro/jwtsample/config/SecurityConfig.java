@@ -7,10 +7,17 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import es.joaquincaro.jwtsample.authentication.JWTAuthenticationFilter;
+import es.joaquincaro.jwtsample.authentication.TokenAuthenticationService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
+	
+	@Autowired
+	TokenAuthenticationService tokenAuthenticationService;
 
 	@Autowired
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -21,11 +28,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	        http.csrf().disable().authorizeRequests()
 	                .antMatchers("/").permitAll()
 	                .antMatchers(HttpMethod.POST, "/auth").permitAll()
-	                .anyRequest().authenticated();
-	                //.and()
+	                .anyRequest().authenticated()
+	                .and()
 	                // And filter other requests to check the presence of JWT in header
-	                //.addFilterBefore(new JWTAuthenticationFilter(),
-	                //        UsernamePasswordAuthenticationFilter.class);
+	                .addFilterBefore(new JWTAuthenticationFilter(tokenAuthenticationService),
+	                        UsernamePasswordAuthenticationFilter.class);
 	    }
 
 

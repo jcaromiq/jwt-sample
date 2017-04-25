@@ -15,42 +15,36 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 @RestController()
 public class AuthenticationController {
 
 	private AuthenticationManager authenticationManager;
+	private TokenAuthenticationService tokenAuthenticationService;
 	
-	private final long EXPIRATION_TIME = 864_000_000;
-	private final String SECRET ="69abd4abf577d7cfd6d370f146611fea";
 
-	private AuthenticationController(AuthenticationManager authenticationManager) {
+	private AuthenticationController(AuthenticationManager authenticationManager, TokenAuthenticationService tokenAuthenticationService) {
 		this.authenticationManager = authenticationManager;
+		this.tokenAuthenticationService = tokenAuthenticationService;
 	}
 	
 	@RequestMapping(value = "/auth", method = RequestMethod.POST)
     public ResponseEntity<String> create(@RequestBody AuthDTO authDTO) throws JsonProcessingException {
+		
 		UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken 
 		= new UsernamePasswordAuthenticationToken(authDTO.getUsername(), authDTO.getPassword());
+		
 		Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+		//Creamos un nuevo dto que contendrá el nombre del usuario
 		AuthDTO authenticated = new AuthDTO();
 		authenticated.setUsername(authentication.getName());
-		String jwt = generateJWT(authenticated);
+		//Podriamos pasar directamente el nombre al servicio de tokenizar en lugar del objeto json, 
+		// pero de esta manera podriamos incluir tambien los roles y demas info en el token
+		ObjectMapper mapper = new ObjectMapper();
+		String jwt = tokenAuthenticationService.generateToken(mapper.writeValueAsString(authenticated));
+		
 		return new ResponseEntity<>(jwt,HttpStatus.ACCEPTED);
 
     }
 	
-	private String generateJWT(AuthDTO authDTO) throws JsonProcessingException {
-		ObjectMapper mapper = new ObjectMapper();
-		String jwt = Jwts.builder()
-                .setSubject(mapper.writeValueAsString(authDTO))
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS512, SECRET)
-                .compact();
-		
-		return jwt;
-	}
-
 }
