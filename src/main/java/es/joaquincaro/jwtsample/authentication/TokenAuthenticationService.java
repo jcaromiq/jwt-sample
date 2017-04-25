@@ -1,5 +1,8 @@
 package es.joaquincaro.jwtsample.authentication;
 
+import static java.util.Collections.emptyList;
+
+import java.io.IOException;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,9 +15,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import static java.util.Collections.emptyList;
-
-import java.io.IOException;
 
 @Service
 public class TokenAuthenticationService {

@@ -1,6 +1,5 @@
 package es.joaquincaro.jwtsample.employee;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.springframework.http.HttpStatus;
