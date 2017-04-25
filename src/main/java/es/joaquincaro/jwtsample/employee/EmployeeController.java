@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController()
 public class EmployeeController {
-	
+
 	@RequestMapping(value = "/employee", method = RequestMethod.GET)
-    public ResponseEntity<Iterable<Employee>> getCompetitions() {
-		Iterable<Employee> employees = Arrays.asList(new Employee("Juan","Garcia"), new Employee("Pedro", "lopez"));
-        return new ResponseEntity<Iterable<Employee>>(employees, HttpStatus.OK);
-    }
+	public ResponseEntity<Iterable<Employee>> getCompetitions() {
+		Iterable<Employee> employees = Arrays.asList(new Employee("Juan", "Garcia"), new Employee("Pedro", "lopez"));
+		return new ResponseEntity<Iterable<Employee>>(employees, HttpStatus.OK);
+	}
 }

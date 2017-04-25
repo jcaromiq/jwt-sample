@@ -24,41 +24,41 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class EmployeeFeature {
-	
+
 	@LocalServerPort
 	int randomServerPort;
-	
+
 	private AuthDTO VALID_USER;
-	
+
 	private String URI_EMPLOYEE;
 	private String URI_AUTH;
 
 	private RestTemplate restTemplate;
-	
+
 	@Before
 	public void setUp() {
-		VALID_USER = new AuthDTO("admin","admin");
-		
+		VALID_USER = new AuthDTO("admin", "admin");
+
 		URI_EMPLOYEE = "http://localhost:" + randomServerPort + "/employee";
 		URI_AUTH = "http://localhost:" + randomServerPort + "/auth";
 		restTemplate = new RestTemplate();
-		
+
 	}
 
 	@Test
 	public void get_all_employees_with_authenticated_user() {
 		String token = restTemplate.postForEntity(URI_AUTH, VALID_USER, String.class).getBody();
-		
+
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Authorization", token);
-		
-		HttpEntity<String> entity = new HttpEntity<String>("",headers);
-		
+
+		HttpEntity<String> entity = new HttpEntity<String>("", headers);
+
 		List<Employee> employees = restTemplate.exchange(URI_EMPLOYEE, HttpMethod.GET, entity, List.class).getBody();
-		
-		assertThat(employees,not(nullValue()));
+
+		assertThat(employees, not(nullValue()));
 	}
-	
+
 	@Test
 	public void get_exception_if_user_is_guest() {
 		try {

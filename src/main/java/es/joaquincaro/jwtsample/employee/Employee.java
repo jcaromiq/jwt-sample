@@ -4,10 +4,11 @@ public class Employee {
 
 	String name;
 	String surname;
-	
+
 	public Employee() {
-		
+
 	}
+
 	public Employee(String name, String surname) {
 		this.name = name;
 		this.surname = surname;
@@ -28,7 +29,5 @@ public class Employee {
 	public void setSurname(String surname) {
 		this.surname = surname;
 	}
-	
-	
 
 }

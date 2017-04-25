@@ -19,7 +19,7 @@ public class AuthenticationFeature {
 
 	@LocalServerPort
 	int randomServerPort;
-	
+
 	private AuthDTO VALID_USER;
 	private AuthDTO NO_VALID_USER;
 
@@ -29,12 +29,12 @@ public class AuthenticationFeature {
 
 	@Before
 	public void setUp() {
-		VALID_USER = new AuthDTO("admin","admin");
-		NO_VALID_USER = new AuthDTO("USUARIO_NO_VALIDO","pass");
-		
+		VALID_USER = new AuthDTO("admin", "admin");
+		NO_VALID_USER = new AuthDTO("USUARIO_NO_VALIDO", "pass");
+
 		URI = "http://localhost:" + randomServerPort + "/auth";
 		restTemplate = new RestTemplate();
-		
+
 	}
 
 	@Test
