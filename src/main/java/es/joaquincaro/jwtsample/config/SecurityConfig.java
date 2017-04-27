@@ -21,15 +21,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication().withUser("admin").password("admin").roles("Admin");
+		auth.inMemoryAuthentication()
+				.withUser("admin")
+				.password("admin")
+				.roles("Admin");
 	}
 
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().authorizeRequests().antMatchers("/").permitAll()
+		http.csrf().disable().authorizeRequests()
+				.antMatchers("/").permitAll()
 				.antMatchers(HttpMethod.POST, "/auth").permitAll()
-				.anyRequest().authenticated().and()
-				// Filtramos las demas request para checkear la presencia del JWT en las cabeceras
-				.addFilterBefore(new JWTAuthenticationFilter(tokenAuthenticationService),
+				.anyRequest().authenticated()
+					.and().addFilterBefore(new JWTAuthenticationFilter(tokenAuthenticationService),
 						UsernamePasswordAuthenticationFilter.class);
 	}
 

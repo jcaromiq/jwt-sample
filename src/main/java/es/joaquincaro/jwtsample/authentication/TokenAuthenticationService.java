@@ -8,6 +8,8 @@ import java.util.Date;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.www.NonceExpiredException;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,10 +45,11 @@ public class TokenAuthenticationService {
 			try {
 				user = mapper.readValue(data, AuthDTO.class);
 			} catch (IOException e) {
-
+                throw new NonceExpiredException("");
 			}
-
-			authenticationToken= (user != null)? new UsernamePasswordAuthenticationToken(user.getUsername(), null, emptyList()) : null;
+			if(user != null) {
+				authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), null, emptyList());
+			}
 		}
 		return authenticationToken;
 	}

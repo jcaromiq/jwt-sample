@@ -2,32 +2,41 @@ package es.joaquincaro.jwtsample.employee;
 
 public class Employee {
 
-	String name;
-	String surname;
+	private String firstName;
+	private String lastName;
+	private String description;
 
 	public Employee() {
 
 	}
 
-	public Employee(String name, String surname) {
-		this.name = name;
-		this.surname = surname;
+	public Employee(String firstName, String lastName, String description) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.description = description;
 	}
 
-	public String getName() {
-		return name;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public String getSurname() {
-		return surname;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setSurname(String surname) {
-		this.surname = surname;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 }
