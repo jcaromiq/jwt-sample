@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.Date;
 
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -27,7 +29,9 @@ public class TokenAuthenticationService {
 	public String generateToken(String payload) {
 		String jwt = Jwts.builder().setSubject(payload)
 				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-				.signWith(SignatureAlgorithm.HS512, SECRET).compact();
+				.signWith(SignatureAlgorithm.HS512, SECRET)
+				.claim(Claims.EXPIRATION,new Date(System.currentTimeMillis() + EXPIRATION_TIME)).claim(Claims.ID,"hola").claim(Claims.NOT_BEFORE,2)
+				.compact();
 		return jwt;
 	}
 
@@ -37,7 +41,7 @@ public class TokenAuthenticationService {
 			String data = Jwts.parser()
 					.setSigningKey(SECRET)
 					.parseClaimsJws(token)
-					.getBody()
+					.getBody().ge
 					.getSubject();
 			
 			ObjectMapper mapper = new ObjectMapper();
