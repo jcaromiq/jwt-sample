@@ -20,7 +20,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Service
 public class TokenAuthenticationService {
 
-	private final long EXPIRATION_TIME = 3600000; 
+	private final long EXPIRATION_TIME = 3600_000; 
 	private final String SECRET = "69abd4abf577d7cfd6d370f146611fea"; //TODO: JVM OR ENVIRONMENT PARAMETER
 	
 
